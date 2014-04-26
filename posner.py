@@ -30,6 +30,15 @@ cue = visual.ShapeStim(win,
 #set up the trials/experiment
 conditions = data.importConditions('conditions.csv') #import conditions from file
 trials = data.TrialHandler(trialList=conditions, nReps=5) #create trial handler (loop)
+
+#add trials to the experiment handler to store data
+thisExp = data.ExperimentHandler(
+        name='Posner', version='1.0', #not needed, just handy
+        extraInfo = info, #the info we created earlier
+        dataFileName = filename, # using our string with data/name_date
+        )
+thisExp.addLoop(trials) #there could be other loops (like practice loop)
+
 respClock = core.Clock()
 for thisTrial in trials:
     # set up this trial
@@ -69,4 +78,5 @@ for thisTrial in trials:
     trials.addData('resp', resp)
     trials.addData('rt', rt)
     trials.addData('corr', corr)
+    thisExp.nextEntry()
         
