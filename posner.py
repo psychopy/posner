@@ -53,9 +53,13 @@ thisExp.addLoop(trials) #there could be other loops (like practice loop)
 
 respClock = core.Clock()
 for thisTrial in trials:
+    
     # set up this trial
+    resp = None
+    rt = None
     probe.setPos( [thisTrial['probeX'], 0] )
     cue.setOri( thisTrial['cueOri'] )
+    
     #fixation period
     fixation.setAutoDraw(True)
     for frameN in range(info['fixFrames']):
@@ -68,7 +72,13 @@ for thisTrial in trials:
     #present probe
     probe.setAutoDraw(True)
     win.callOnFlip(respClock.reset) #NB: reset not reset()
+    event.clearEvents()
     for frameN in range(info['probeFrames']):
+        keys = event.getKeys(keyList = ['left','right','escape'])
+        if len(keys)>0:
+            resp = keys[0] #take the first keypress as the response
+            rt = respClock.getTime()
+            break #out of the probe-drawing loop
         win.flip()
     probe.setAutoDraw(False)
     fixation.setAutoDraw(False)
@@ -76,10 +86,11 @@ for thisTrial in trials:
     #clear screen
     win.flip()
     
-    #wait for response
-    keys = event.waitKeys(keyList = ['left','right','escape'])
-    resp = keys[0] #take first response
-    rt = respClock.getTime()
+    #wait for response if we didn't already have one
+    if resp is None:
+        keys = event.waitKeys(keyList = ['left','right','escape'])
+        resp = keys[0] #take first response
+        rt = respClock.getTime()
     
     #check if the response was correct
     if thisTrial['probeX']>0 and resp=='right':
