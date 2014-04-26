@@ -1,5 +1,14 @@
 from psychopy import visual, core, event, data, gui
+from psychopy import logging
 
+DEBUG = True
+if DEBUG:
+    fullscr = False
+    logging.console.setLevel(logging.DEBUG)
+else:
+    fullscr = True
+    logging.console.setLevel(logging.WARNING)
+    
 info = {} #a dictionary
 #present dialog to collect info
 info['participant'] = ''
@@ -13,8 +22,11 @@ info['probeTime'] = 0.2
 info['dateStr'] = data.getDateStr() #will create str of current date/time
 #create the base filename for our data files
 filename = "data/{participant}_{dateStr}".format(**info)
+logfile = logging.LogFile(filename+".log",
+    filemode='w',#if you set this to 'a' it will append instead of overwriting
+    level=logging.EXP)
 
-win = visual.Window([1024,768], fullscr=False, units='pix')
+win = visual.Window([1024,768], fullscr=fullscr, units='pix')
 
 # initialise stimuli
 fixation = visual.Circle(win, size = 5,
@@ -73,9 +85,11 @@ for thisTrial in trials:
     elif thisTrial['probeX']<0 and resp=='left':
         corr = 1
     elif resp=='escape':
+        corr = None
         trials.finished = True
     else:
         corr = 0
+        
     #store the response and RT
     trials.addData('resp', resp)
     trials.addData('rt', rt)
