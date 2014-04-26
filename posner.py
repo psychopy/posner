@@ -8,7 +8,7 @@ if DEBUG:
 else:
     fullscr = True
     logging.console.setLevel(logging.WARNING)
-    
+
 info = {} #a dictionary
 #present dialog to collect info
 info['participant'] = ''
@@ -16,9 +16,9 @@ dlg = gui.DlgFromDict(info)
 if not dlg.OK:
     core.quit()
 #add additional info after the dialog has gone
-info['fixTime'] = 0.5 # seconds
-info['cueTime'] = 0.2
-info['probeTime'] = 0.2
+info['fixFrames'] = 30 #0.5s at 60Hz
+info['cueFrames'] = 12 #200ms at 60Hz
+info['probeFrames'] = 12
 info['dateStr'] = data.getDateStr() #will create str of current date/time
 #create the base filename for our data files
 filename = "data/{participant}_{dateStr}".format(**info)
@@ -57,19 +57,21 @@ for thisTrial in trials:
     probe.setPos( [thisTrial['probeX'], 0] )
     cue.setOri( thisTrial['cueOri'] )
     #fixation period
-    fixation.draw()
-    win.flip()
-    core.wait(info['fixTime'])
+    fixation.setAutoDraw(True)
+    for frameN in range(info['fixFrames']):
+        win.flip()
     #present cue
-    cue.draw()
-    win.flip()
-    core.wait(info['cueTime'])
+    cue.setAutoDraw(True)
+    for frameN in range(info['cueFrames']):
+        win.flip()
+    cue.setAutoDraw(False)
     #present probe
-    fixation.draw()
-    probe.draw()
-    win.flip()
-    respClock.reset()
-    core.wait(info['probeTime'])
+    probe.setAutoDraw(True)
+    win.callOnFlip(respClock.reset) #NB: reset not reset()
+    for frameN in range(info['probeFrames']):
+        win.flip()
+    probe.setAutoDraw(False)
+    fixation.setAutoDraw(False)
     
     #clear screen
     win.flip()
