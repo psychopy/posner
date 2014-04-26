@@ -1,9 +1,18 @@
-from psychopy import visual, core, event, data
+from psychopy import visual, core, event, data, gui
 
 info = {} #a dictionary
+#present dialog to collect info
+info['participant'] = ''
+dlg = gui.DlgFromDict(info)
+if not dlg.OK:
+    core.quit()
+#add additional info after the dialog has gone
 info['fixTime'] = 0.5 # seconds
 info['cueTime'] = 0.2
 info['probeTime'] = 0.2
+info['dateStr'] = data.getDateStr() #will create str of current date/time
+#create the base filename for our data files
+filename = "data/{participant}_{dateStr}".format(**info)
 
 win = visual.Window([1024,768], fullscr=False, units='pix')
 
