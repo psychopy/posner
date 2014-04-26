@@ -1,7 +1,7 @@
 from psychopy import visual, core, event, data, gui
 from psychopy import logging
 
-DEBUG = True
+DEBUG = False
 if DEBUG:
     fullscr = False
     logging.console.setLevel(logging.DEBUG)
@@ -26,17 +26,17 @@ logfile = logging.LogFile(filename+".log",
     filemode='w',#if you set this to 'a' it will append instead of overwriting
     level=logging.EXP)
 
-win = visual.Window([1024,768], fullscr=fullscr, units='pix')
+win = visual.Window([1024,768], fullscr=fullscr, monitor='testMonitor', units='deg')
 
 # initialise stimuli
-fixation = visual.Circle(win, size = 5,
+fixation = visual.Circle(win, size = 0.5,
     lineColor = 'white', fillColor = 'lightGrey')
-probe = visual.ImageStim(win, size = 80, # 'size' is 3xSD for gauss,
-    pos = [300, 0], #we'll change this later
+probe = visual.ImageStim(win, size = 2, # 'size' is 3xSD for gauss,
+    pos = [5, 0], #we'll change this later
     image = None, mask = 'gauss',
     color = 'green')
 cue = visual.ShapeStim(win, 
-    vertices = [[-30,-20], [-30,20], [30,0]],
+    vertices = [[-3,-2], [-3,2], [3,0]],
     lineColor = 'red', fillColor = 'salmon')
 
 #set up the trials/experiment
