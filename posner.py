@@ -1,5 +1,10 @@
 from psychopy import visual, core, event, data
 
+info = {} #a dictionary
+info['fixTime'] = 0.5 # seconds
+info['cueTime'] = 0.2
+info['probeTime'] = 0.2
+
 win = visual.Window([1024,768], fullscr=False, units='pix')
 
 # initialise stimuli
@@ -16,7 +21,13 @@ cue = visual.ShapeStim(win,
 # run one trial
 fixation.draw()
 win.flip()
+core.wait(info['fixTime'])
+
 cue.draw()
 win.flip()
+core.wait(info['cueTime'])
+
+fixation.draw()
 probe.draw()
 win.flip()
+core.wait(info['probeTime'])
