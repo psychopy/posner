@@ -21,6 +21,7 @@ cue = visual.ShapeStim(win,
 #set up the trials/experiment
 conditions = data.importConditions('conditions.csv') #import conditions from file
 trials = data.TrialHandler(trialList=conditions, nReps=5) #create trial handler (loop)
+respClock = core.Clock()
 for thisTrial in trials:
     # set up this trial
     probe.setPos( [thisTrial['probeX'], 0] )
@@ -37,4 +38,26 @@ for thisTrial in trials:
     fixation.draw()
     probe.draw()
     win.flip()
+    respClock.reset()
     core.wait(info['probeTime'])
+    
+    #clear screen
+    win.flip()
+    
+    #wait for response
+    keys = event.waitKeys(keyList = ['left','right'])
+    resp = keys[0] #take first response
+    rt = respClock.getTime()
+    
+    #check if the response was correct
+    if thisTrial['probeX']>0 and resp=='right':
+        corr = 1
+    elif thisTrial['probeX']<0 and resp=='left':
+        corr = 1
+    else:
+        corr = 0
+    #store the response and RT
+    trials.addData('resp', resp)
+    trials.addData('rt', rt)
+    trials.addData('corr', corr)
+        
