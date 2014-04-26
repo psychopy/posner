@@ -18,17 +18,22 @@ cue = visual.ShapeStim(win,
     vertices = [[-30,-20], [-30,20], [30,0]],
     lineColor = 'red', fillColor = 'salmon')
 
-trials = data.TrialHandler(trialList=[], nReps=5)
+#set up the trials/experiment
+conditions = data.importConditions('conditions.csv') #import conditions from file
+trials = data.TrialHandler(trialList=conditions, nReps=5) #create trial handler (loop)
 for thisTrial in trials:
-    # run one trial
+    # set up this trial
+    probe.setPos( [thisTrial['probeX'], 0] )
+    cue.setOri( thisTrial['cueOri'] )
+    #fixation period
     fixation.draw()
     win.flip()
     core.wait(info['fixTime'])
-
+    #present cue
     cue.draw()
     win.flip()
     core.wait(info['cueTime'])
-
+    #present probe
     fixation.draw()
     probe.draw()
     win.flip()
