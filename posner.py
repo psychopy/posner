@@ -18,16 +18,18 @@ cue = visual.ShapeStim(win,
     vertices = [[-30,-20], [-30,20], [30,0]],
     lineColor = 'red', fillColor = 'salmon')
 
-# run one trial
-fixation.draw()
-win.flip()
-core.wait(info['fixTime'])
+trials = data.TrialHandler(trialList=[], nReps=5)
+for thisTrial in trials:
+    # run one trial
+    fixation.draw()
+    win.flip()
+    core.wait(info['fixTime'])
 
-cue.draw()
-win.flip()
-core.wait(info['cueTime'])
+    cue.draw()
+    win.flip()
+    core.wait(info['cueTime'])
 
-fixation.draw()
-probe.draw()
-win.flip()
-core.wait(info['probeTime'])
+    fixation.draw()
+    probe.draw()
+    win.flip()
+    core.wait(info['probeTime'])
