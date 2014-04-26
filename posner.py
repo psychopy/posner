@@ -63,7 +63,7 @@ for thisTrial in trials:
     win.flip()
     
     #wait for response
-    keys = event.waitKeys(keyList = ['left','right'])
+    keys = event.waitKeys(keyList = ['left','right','escape'])
     resp = keys[0] #take first response
     rt = respClock.getTime()
     
@@ -72,6 +72,8 @@ for thisTrial in trials:
         corr = 1
     elif thisTrial['probeX']<0 and resp=='left':
         corr = 1
+    elif resp=='escape':
+        trials.finished = True
     else:
         corr = 0
     #store the response and RT
