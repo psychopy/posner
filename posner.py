@@ -23,12 +23,6 @@ info['cueFrames'] = 12 #200ms at 60Hz
 info['probeFrames'] = 12
 info['dateStr'] = data.getDateStr() #will create str of current date/time
 
-#create the base filename for our data files
-filename = "data/{participant}_{dateStr}".format(**info)
-logfile = logging.LogFile(filename+".log",
-    filemode='w',#if you set this to 'a' it will append instead of overwriting
-    level=logging.EXP)
-
 # initialise stimuli
 win = visual.Window([1024,768], fullscr=fullscr, monitor='testMonitor', units='deg')
 fixation = visual.Circle(win, size = 0.5,
@@ -47,8 +41,15 @@ def runBlock(nReps, saveTrials=True):
     #set up the trials/experiment
     conditions = data.importConditions('conditions.csv') #import conditions from file
     trials = data.TrialHandler(trialList=conditions, nReps=nReps) #create trial handler (loop)
-    #add trials to the experiment handler to store data
+    
+    #(optional) set up logging if events should be saved
     if saveTrials:
+        #create the base filename for our data files
+        filename = "data/{participant}_{dateStr}".format(**info)
+        logfile = logging.LogFile(filename+".log",
+            filemode='w',#if you set this to 'a' it will append instead of overwriting
+            level=logging.EXP)
+        #add trials to the experiment handler to store data
         thisExp = data.ExperimentHandler(
                 name='Posner', version='1.0', #not needed, just handy
                 extraInfo = info, #the info we created earlier
