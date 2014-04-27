@@ -1,6 +1,7 @@
-from psychopy import visual, core, event, data, gui
-from psychopy import logging
+# Import psychopy modules
+from psychopy import visual, core, event, data, gui, logging
 
+# Toggle debugging/production
 DEBUG = False
 if DEBUG:
     fullscr = False
@@ -9,6 +10,7 @@ else:
     fullscr = True
     logging.console.setLevel(logging.WARNING)
 
+# Collect general parameters in the "info" dictionary
 info = {} #a dictionary
 #present dialog to collect info
 info['participant'] = ''
@@ -20,15 +22,15 @@ info['fixFrames'] = 30 #0.5s at 60Hz
 info['cueFrames'] = 12 #200ms at 60Hz
 info['probeFrames'] = 12
 info['dateStr'] = data.getDateStr() #will create str of current date/time
+
 #create the base filename for our data files
 filename = "data/{participant}_{dateStr}".format(**info)
 logfile = logging.LogFile(filename+".log",
     filemode='w',#if you set this to 'a' it will append instead of overwriting
     level=logging.EXP)
 
-win = visual.Window([1024,768], fullscr=fullscr, monitor='testMonitor', units='deg')
-
 # initialise stimuli
+win = visual.Window([1024,768], fullscr=fullscr, monitor='testMonitor', units='deg')
 fixation = visual.Circle(win, size = 0.5,
     lineColor = 'white', fillColor = 'lightGrey')
 probe = visual.ImageStim(win, size = 2, # 'size' is 3xSD for gauss,
@@ -38,11 +40,11 @@ probe = visual.ImageStim(win, size = 2, # 'size' is 3xSD for gauss,
 cue = visual.ShapeStim(win, 
     vertices = [[-3,-2], [-3,2], [3,0]],
     lineColor = 'red', fillColor = 'salmon')
+respClock = core.Clock()
 
 #set up the trials/experiment
 conditions = data.importConditions('conditions.csv') #import conditions from file
 trials = data.TrialHandler(trialList=conditions, nReps=5) #create trial handler (loop)
-
 #add trials to the experiment handler to store data
 thisExp = data.ExperimentHandler(
         name='Posner', version='1.0', #not needed, just handy
@@ -51,7 +53,7 @@ thisExp = data.ExperimentHandler(
         )
 thisExp.addLoop(trials) #there could be other loops (like practice loop)
 
-respClock = core.Clock()
+# Actually present stimuli: loop through trials
 for thisTrial in trials:
     
     # set up this trial
@@ -64,12 +66,14 @@ for thisTrial in trials:
     fixation.setAutoDraw(True)
     for frameN in range(info['fixFrames']):
         win.flip()
+        
     #present cue
     cue.setAutoDraw(True)
     for frameN in range(info['cueFrames']):
         win.flip()
     cue.setAutoDraw(False)
-    #present probe
+
+    #present probe and collect responses during presentation
     probe.setAutoDraw(True)
     win.callOnFlip(respClock.reset) #NB: reset not reset()
     event.clearEvents()
@@ -107,5 +111,6 @@ for thisTrial in trials:
     trials.addData('resp', resp)
     trials.addData('rt', rt)
     trials.addData('corr', corr)
+
+    # Register end of trial in the log file
     thisExp.nextEntry()
-        
