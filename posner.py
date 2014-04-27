@@ -1,6 +1,10 @@
 # Import psychopy modules
 from psychopy import visual, core, event, data, gui, logging
 
+instructionPractice = 'Practice starts now. Use arrow keys to identify where the green target is'
+instructionExp = 'Good. Now continue until the experiment stops automatically.'
+instructionThanks = 'Thank you!'
+
 # Toggle debugging/production
 DEBUG = True
 if DEBUG:
@@ -34,7 +38,22 @@ probe = visual.ImageStim(win, size = 2, # 'size' is 3xSD for gauss,
 cue = visual.ShapeStim(win, 
     vertices = [[-3,-2], [-3,2], [3,0]],
     lineColor = 'red', fillColor = 'salmon')
+instruction = visual.TextStim(win)
 respClock = core.Clock()
+
+# Shows instructions
+def showInstruction(text, keyList=None):  # obs, default argument for keyList
+    # Show text
+    instruction.setText(text)  # use the question passed as argument
+    instruction.draw()
+    win.flip()
+    
+    # Wait for response
+    response = event.waitKeys(keyList=keyList)  # use the keyList passed as argument
+    if response[0] == 'escape':
+        core.quit()
+    return response[0]  # return first response
+
 
 # Run a block of trials. nReps is a positive integer and saveTrial is True/False.
 def runBlock(nReps, saveTrials=True):
@@ -121,5 +140,11 @@ def runBlock(nReps, saveTrials=True):
         if saveTrials:
             thisExp.nextEntry()
 
+# Run practice session
+showInstruction(instructionPractice, ['space'])
 runBlock(1, saveTrials=False)
+
+# Real experiment
+showInstruction(instructionExp, ['space'])
 runBlock(5)
+showInstruction(instructionThanks)
