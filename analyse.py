@@ -30,5 +30,11 @@ for thisFilename in filenames:
     #run a t-test
     t, p = stats.ttest_ind(conflict.rt, congruent.rt)
     print "Independent samples t-test: t=%.3f, p=%.4f" %(t, p)
+
+    # Create a Figure:
+    fig, ax = plt.subplots(1)
+    ax.bar([1,2], [meanConfl, meanCongr], yerr=[semConfl, semCongr])
+    plt.show()
+    
     
     
